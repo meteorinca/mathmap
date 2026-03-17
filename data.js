@@ -1,25 +1,42 @@
 /**
  * Math Skills Tree Data
  * 
+ * Tree grows BOTTOM → TOP.
+ * y = 0 is the BOTTOM (foundations).
+ * Higher y values go UP visually.
+ *
  * Each course has:
  *   - name: display name
  *   - id: unique slug
  *   - icon: emoji
- *   - color: HSL accent color
+ *   - branch: color branch group ("foundations", "elementary", "middle", "algebra", "geometry", "statistics", "calculus", "advanced")
  *   - topics: array of { name, link }
  *   - x, y: position on the skill tree canvas (grid units)
  *   - prereqs: array of course IDs that should be completed first
  */
+
+// Branch color themes
+const BRANCH_COLORS = {
+  foundations: { main: "#ff6b9d", glow: "rgba(255,107,157,0.5)", bg: "rgba(255,107,157,0.15)" },
+  elementary:  { main: "#ffd166", glow: "rgba(255,209,102,0.5)", bg: "rgba(255,209,102,0.15)" },
+  middle:      { main: "#06d6a0", glow: "rgba(6,214,160,0.5)",   bg: "rgba(6,214,160,0.15)" },
+  algebra:     { main: "#118ab2", glow: "rgba(17,138,178,0.5)",  bg: "rgba(17,138,178,0.15)" },
+  geometry:    { main: "#ef476f", glow: "rgba(239,71,111,0.5)",  bg: "rgba(239,71,111,0.15)" },
+  statistics:  { main: "#8338ec", glow: "rgba(131,56,236,0.5)",  bg: "rgba(131,56,236,0.15)" },
+  calculus:    { main: "#ff6b35", glow: "rgba(255,107,53,0.5)",  bg: "rgba(255,107,53,0.15)" },
+  advanced:    { main: "#00b4d8", glow: "rgba(0,180,216,0.5)",   bg: "rgba(0,180,216,0.15)" }
+};
+
 const MATH_DATA = [
   // ══════════════════════════════════════════════════
-  // ROW 0 — Foundations (top of the tree)
+  // ROW 0 (BOTTOM) — Foundations
   // ══════════════════════════════════════════════════
   {
     name: "Early Math Review",
     id: "early-math-review",
     icon: "🧒",
-    color: "hsl(340, 82%, 62%)",
-    x: 0, y: 0,
+    branch: "foundations",
+    x: 3, y: 0,
     prereqs: [],
     topics: [
       { name: "Counting", link: "" },
@@ -36,8 +53,8 @@ const MATH_DATA = [
     name: "Kindergarten",
     id: "kindergarten-math",
     icon: "🎨",
-    color: "hsl(25, 95%, 60%)",
-    x: 2, y: 0,
+    branch: "foundations",
+    x: 5, y: 0,
     prereqs: [],
     topics: [
       { name: "Counting and place value", link: "" },
@@ -47,14 +64,14 @@ const MATH_DATA = [
   },
 
   // ══════════════════════════════════════════════════
-  // ROW 1 — Elementary
+  // ROW 1 — Elementary begins
   // ══════════════════════════════════════════════════
   {
     name: "1st Grade",
     id: "1st-grade-math",
     icon: "1️⃣",
-    color: "hsl(45, 93%, 55%)",
-    x: 1, y: 1,
+    branch: "elementary",
+    x: 4, y: 1,
     prereqs: ["early-math-review", "kindergarten-math"],
     topics: [
       { name: "Place value", link: "" },
@@ -66,8 +83,8 @@ const MATH_DATA = [
     name: "2nd Grade",
     id: "2nd-grade-math",
     icon: "2️⃣",
-    color: "hsl(130, 60%, 50%)",
-    x: 1, y: 2,
+    branch: "elementary",
+    x: 4, y: 2,
     prereqs: ["1st-grade-math"],
     topics: [
       { name: "Add and subtract within 20", link: "" },
@@ -80,12 +97,16 @@ const MATH_DATA = [
       { name: "Geometry", link: "" }
     ]
   },
+
+  // ══════════════════════════════════════════════════
+  // ROW 3 — Branching point
+  // ══════════════════════════════════════════════════
   {
     name: "3rd Grade",
     id: "3rd-grade-math",
     icon: "3️⃣",
-    color: "hsl(160, 65%, 45%)",
-    x: 0, y: 3,
+    branch: "elementary",
+    x: 3, y: 3,
     prereqs: ["2nd-grade-math"],
     topics: [
       { name: "Intro to multiplication", link: "" },
@@ -108,8 +129,8 @@ const MATH_DATA = [
     name: "Arithmetic",
     id: "arithmetic",
     icon: "➕",
-    color: "hsl(15, 85%, 57%)",
-    x: 2, y: 3,
+    branch: "elementary",
+    x: 5, y: 3,
     prereqs: ["2nd-grade-math"],
     topics: [
       { name: "Intro to multiplication", link: "" },
@@ -133,12 +154,16 @@ const MATH_DATA = [
       { name: "Multiply and divide negative numbers", link: "" }
     ]
   },
+
+  // ══════════════════════════════════════════════════
+  // ROW 4–5
+  // ══════════════════════════════════════════════════
   {
     name: "4th Grade",
     id: "4th-grade-math",
     icon: "4️⃣",
-    color: "hsl(190, 75%, 48%)",
-    x: 0, y: 4,
+    branch: "elementary",
+    x: 2, y: 4,
     prereqs: ["3rd-grade-math"],
     topics: [
       { name: "Place value", link: "" },
@@ -161,8 +186,8 @@ const MATH_DATA = [
     name: "5th Grade",
     id: "5th-grade-math",
     icon: "5️⃣",
-    color: "hsl(210, 80%, 55%)",
-    x: 0, y: 5,
+    branch: "middle",
+    x: 2, y: 5,
     prereqs: ["4th-grade-math"],
     topics: [
       { name: "Decimal place value", link: "" },
@@ -187,8 +212,8 @@ const MATH_DATA = [
     name: "Basic Geo & Measurement",
     id: "basic-geometry-measurement",
     icon: "📐",
-    color: "hsl(185, 70%, 45%)",
-    x: 2, y: 5,
+    branch: "geometry",
+    x: 6, y: 5,
     prereqs: ["arithmetic"],
     topics: [
       { name: "Intro to area and perimeter", link: "" },
@@ -209,14 +234,14 @@ const MATH_DATA = [
   },
 
   // ══════════════════════════════════════════════════
-  // ROW 6 — Middle School
+  // ROW 6–8 — Middle School
   // ══════════════════════════════════════════════════
   {
     name: "6th Grade",
     id: "6th-grade-math",
     icon: "6️⃣",
-    color: "hsl(240, 65%, 60%)",
-    x: 0, y: 6,
+    branch: "middle",
+    x: 2, y: 6,
     prereqs: ["5th-grade-math"],
     topics: [
       { name: "Ratios", link: "" },
@@ -236,8 +261,8 @@ const MATH_DATA = [
     name: "7th Grade",
     id: "7th-grade-math",
     icon: "7️⃣",
-    color: "hsl(265, 70%, 58%)",
-    x: 0, y: 7,
+    branch: "middle",
+    x: 1, y: 7,
     prereqs: ["6th-grade-math"],
     topics: [
       { name: "Proportional relationships", link: "" },
@@ -252,28 +277,11 @@ const MATH_DATA = [
     ]
   },
   {
-    name: "8th Grade",
-    id: "8th-grade-math",
-    icon: "8️⃣",
-    color: "hsl(290, 65%, 55%)",
-    x: 0, y: 8,
-    prereqs: ["7th-grade-math"],
-    topics: [
-      { name: "Numbers and operations", link: "" },
-      { name: "Solving equations with one unknown", link: "" },
-      { name: "Linear equations and functions", link: "" },
-      { name: "Systems of equations", link: "" },
-      { name: "Geometry", link: "" },
-      { name: "Geometric transformations", link: "" },
-      { name: "Data and modeling", link: "" }
-    ]
-  },
-  {
     name: "Pre-Algebra",
     id: "pre-algebra",
     icon: "🔢",
-    color: "hsl(35, 90%, 55%)",
-    x: 2, y: 7,
+    branch: "algebra",
+    x: 5, y: 7,
     prereqs: ["6th-grade-math", "basic-geometry-measurement"],
     topics: [
       { name: "Factors and multiples", link: "" },
@@ -293,34 +301,33 @@ const MATH_DATA = [
       { name: "Systems of equations", link: "" }
     ]
   },
+  {
+    name: "8th Grade",
+    id: "8th-grade-math",
+    icon: "8️⃣",
+    branch: "middle",
+    x: 1, y: 8,
+    prereqs: ["7th-grade-math"],
+    topics: [
+      { name: "Numbers and operations", link: "" },
+      { name: "Solving equations with one unknown", link: "" },
+      { name: "Linear equations and functions", link: "" },
+      { name: "Systems of equations", link: "" },
+      { name: "Geometry", link: "" },
+      { name: "Geometric transformations", link: "" },
+      { name: "Data and modeling", link: "" }
+    ]
+  },
 
   // ══════════════════════════════════════════════════
   // ROW 9 — High School Track
   // ══════════════════════════════════════════════════
   {
-    name: "Algebra Basics",
-    id: "algebra-basics",
-    icon: "🅰️",
-    color: "hsl(50, 85%, 50%)",
-    x: 2, y: 9,
-    prereqs: ["pre-algebra"],
-    topics: [
-      { name: "Foundations", link: "" },
-      { name: "Algebraic expressions", link: "" },
-      { name: "Linear equations and inequalities", link: "" },
-      { name: "Graphing lines and slope", link: "" },
-      { name: "Systems of equations", link: "" },
-      { name: "Expressions with exponents", link: "" },
-      { name: "Quadratics and polynomials", link: "" },
-      { name: "Equations and geometry", link: "" }
-    ]
-  },
-  {
     name: "Algebra 1",
     id: "algebra-1",
     icon: "📊",
-    color: "hsl(220, 75%, 55%)",
-    x: 0, y: 9,
+    branch: "algebra",
+    x: 1, y: 9,
     prereqs: ["8th-grade-math"],
     topics: [
       { name: "Algebra foundations", link: "" },
@@ -341,29 +348,32 @@ const MATH_DATA = [
     ]
   },
   {
-    name: "HS Geometry",
-    id: "hs-geometry",
-    icon: "📏",
-    color: "hsl(170, 70%, 45%)",
-    x: 2, y: 10,
-    prereqs: ["algebra-basics", "algebra-1"],
+    name: "Algebra Basics",
+    id: "algebra-basics",
+    icon: "🅰️",
+    branch: "algebra",
+    x: 5, y: 9,
+    prereqs: ["pre-algebra"],
     topics: [
-      { name: "Performing transformations", link: "" },
-      { name: "Transformation properties and proofs", link: "" },
-      { name: "Congruence", link: "" },
-      { name: "Similarity", link: "" },
-      { name: "Right triangles & trigonometry", link: "" },
-      { name: "Analytic geometry", link: "" },
-      { name: "Conic sections", link: "" },
-      { name: "Circles", link: "" },
-      { name: "Solid geometry", link: "" }
+      { name: "Foundations", link: "" },
+      { name: "Algebraic expressions", link: "" },
+      { name: "Linear equations and inequalities", link: "" },
+      { name: "Graphing lines and slope", link: "" },
+      { name: "Systems of equations", link: "" },
+      { name: "Expressions with exponents", link: "" },
+      { name: "Quadratics and polynomials", link: "" },
+      { name: "Equations and geometry", link: "" }
     ]
   },
+
+  // ══════════════════════════════════════════════════
+  // ROW 10 — Core High School
+  // ══════════════════════════════════════════════════
   {
     name: "Algebra 2",
     id: "algebra-2",
     icon: "📈",
-    color: "hsl(250, 70%, 58%)",
+    branch: "algebra",
     x: 0, y: 10,
     prereqs: ["algebra-1"],
     topics: [
@@ -382,25 +392,30 @@ const MATH_DATA = [
     ]
   },
   {
-    name: "Trigonometry",
-    id: "trigonometry",
-    icon: "📐",
-    color: "hsl(355, 75%, 58%)",
-    x: 0, y: 11,
-    prereqs: ["algebra-2"],
+    name: "HS Geometry",
+    id: "hs-geometry",
+    icon: "📏",
+    branch: "geometry",
+    x: 4, y: 10,
+    prereqs: ["algebra-basics", "algebra-1"],
     topics: [
+      { name: "Performing transformations", link: "" },
+      { name: "Transformation properties and proofs", link: "" },
+      { name: "Congruence", link: "" },
+      { name: "Similarity", link: "" },
       { name: "Right triangles & trigonometry", link: "" },
-      { name: "Trigonometric functions", link: "" },
-      { name: "Non-right triangles & trigonometry", link: "" },
-      { name: "Trigonometric equations and identities", link: "" }
+      { name: "Analytic geometry", link: "" },
+      { name: "Conic sections", link: "" },
+      { name: "Circles", link: "" },
+      { name: "Solid geometry", link: "" }
     ]
   },
   {
     name: "HS Statistics",
     id: "hs-statistics",
     icon: "📊",
-    color: "hsl(145, 60%, 45%)",
-    x: 4, y: 10,
+    branch: "statistics",
+    x: 7, y: 10,
     prereqs: ["algebra-1"],
     topics: [
       { name: "Displaying a single quantitative variable", link: "" },
@@ -414,13 +429,31 @@ const MATH_DATA = [
   },
 
   // ══════════════════════════════════════════════════
-  // ROW 11–12 — Pre-College / College Prep
+  // ROW 11 — Trigonometry
+  // ══════════════════════════════════════════════════
+  {
+    name: "Trigonometry",
+    id: "trigonometry",
+    icon: "📐",
+    branch: "calculus",
+    x: 0, y: 11,
+    prereqs: ["algebra-2"],
+    topics: [
+      { name: "Right triangles & trigonometry", link: "" },
+      { name: "Trigonometric functions", link: "" },
+      { name: "Non-right triangles & trigonometry", link: "" },
+      { name: "Trigonometric equations and identities", link: "" }
+    ]
+  },
+
+  // ══════════════════════════════════════════════════
+  // ROW 12 — Pre-College / College Prep
   // ══════════════════════════════════════════════════
   {
     name: "Precalculus",
     id: "precalculus",
     icon: "🧮",
-    color: "hsl(270, 65%, 55%)",
+    branch: "calculus",
     x: 0, y: 12,
     prereqs: ["trigonometry"],
     topics: [
@@ -440,8 +473,8 @@ const MATH_DATA = [
     name: "College Algebra",
     id: "college-algebra",
     icon: "🎓",
-    color: "hsl(215, 75%, 52%)",
-    x: 2, y: 12,
+    branch: "algebra",
+    x: 4, y: 12,
     prereqs: ["algebra-2", "hs-geometry"],
     topics: [
       { name: "Linear equations and inequalities", link: "" },
@@ -464,8 +497,8 @@ const MATH_DATA = [
     name: "Stats & Probability",
     id: "statistics-probability",
     icon: "🎲",
-    color: "hsl(0, 70%, 58%)",
-    x: 4, y: 12,
+    branch: "statistics",
+    x: 7, y: 12,
     prereqs: ["hs-statistics"],
     topics: [
       { name: "Analyzing categorical data", link: "" },
@@ -488,13 +521,13 @@ const MATH_DATA = [
   },
 
   // ══════════════════════════════════════════════════
-  // ROW 13–15 — Calculus
+  // ROW 14 — Calculus
   // ══════════════════════════════════════════════════
   {
     name: "AP Calculus AB",
     id: "ap-calculus-ab",
     icon: "🅰️",
-    color: "hsl(340, 75%, 55%)",
+    branch: "calculus",
     x: 0, y: 14,
     prereqs: ["precalculus"],
     topics: [
@@ -512,8 +545,8 @@ const MATH_DATA = [
     name: "Calculus 1",
     id: "calculus-1",
     icon: "🧮",
-    color: "hsl(355, 70%, 55%)",
-    x: 2, y: 14,
+    branch: "calculus",
+    x: 3, y: 14,
     prereqs: ["precalculus", "college-algebra"],
     topics: [
       { name: "Limits and continuity", link: "" },
@@ -530,8 +563,8 @@ const MATH_DATA = [
     name: "AP Statistics",
     id: "ap-statistics",
     icon: "📉",
-    color: "hsl(155, 65%, 42%)",
-    x: 4, y: 14,
+    branch: "statistics",
+    x: 7, y: 14,
     prereqs: ["statistics-probability"],
     topics: [
       { name: "Exploring categorical data", link: "" },
@@ -547,11 +580,15 @@ const MATH_DATA = [
       { name: "Inference for quantitative data: slopes", link: "" }
     ]
   },
+
+  // ══════════════════════════════════════════════════
+  // ROW 15 — Calculus continued
+  // ══════════════════════════════════════════════════
   {
     name: "AP Calculus BC",
     id: "ap-calculus-bc",
     icon: "🅱️",
-    color: "hsl(20, 85%, 55%)",
+    branch: "calculus",
     x: 0, y: 15,
     prereqs: ["ap-calculus-ab"],
     topics: [
@@ -571,8 +608,8 @@ const MATH_DATA = [
     name: "Calculus 2",
     id: "calculus-2",
     icon: "🧮",
-    color: "hsl(180, 65%, 45%)",
-    x: 2, y: 15,
+    branch: "calculus",
+    x: 3, y: 15,
     prereqs: ["calculus-1"],
     topics: [
       { name: "Integrals review", link: "" },
@@ -585,13 +622,13 @@ const MATH_DATA = [
   },
 
   // ══════════════════════════════════════════════════
-  // ROW 16–17 — Advanced College
+  // ROW 17 — Advanced College
   // ══════════════════════════════════════════════════
   {
     name: "Multivariable Calculus",
     id: "multivariable-calculus",
     icon: "🌐",
-    color: "hsl(195, 80%, 48%)",
+    branch: "advanced",
     x: 0, y: 17,
     prereqs: ["ap-calculus-bc", "calculus-2"],
     topics: [
@@ -606,8 +643,8 @@ const MATH_DATA = [
     name: "Differential Equations",
     id: "differential-equations",
     icon: "🔄",
-    color: "hsl(275, 70%, 55%)",
-    x: 2, y: 17,
+    branch: "advanced",
+    x: 3, y: 17,
     prereqs: ["calculus-2"],
     topics: [
       { name: "First order differential equations", link: "" },
@@ -619,8 +656,8 @@ const MATH_DATA = [
     name: "Linear Algebra",
     id: "linear-algebra",
     icon: "🔢",
-    color: "hsl(230, 70%, 55%)",
-    x: 4, y: 17,
+    branch: "advanced",
+    x: 6, y: 17,
     prereqs: ["calculus-1"],
     topics: [
       { name: "Vectors and spaces", link: "" },
