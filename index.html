@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Math Skills Tree — Interactive Learning Path</title>
+  <meta name="description" content="Interactive math skill tree tracker. Visualize your learning path from arithmetic through calculus and beyond.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- ═══ Top Bar ═══ -->
+  <header id="topbar">
+    <div class="topbar-left">
+      <span class="logo">🧠</span>
+      <h1>Math Skills Tree</h1>
+    </div>
+    <div class="topbar-center">
+      <div class="progress-pill">
+        <div class="progress-fill" id="global-progress-fill"></div>
+        <span class="progress-text" id="global-progress-text">0 / 0 topics</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button id="btn-reset" class="topbar-btn" title="Reset all progress">↺ Reset</button>
+      <button id="btn-zoom-in" class="topbar-btn" title="Zoom in">＋</button>
+      <button id="btn-zoom-out" class="topbar-btn" title="Zoom out">−</button>
+      <button id="btn-fit" class="topbar-btn" title="Fit to screen">⊞</button>
+    </div>
+  </header>
+
+  <!-- ═══ Canvas area (pannable + zoomable) ═══ -->
+  <div id="viewport">
+    <div id="canvas">
+      <svg id="connections" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div id="nodes"></div>
+    </div>
+  </div>
+
+  <!-- ═══ Detail Panel (slide-up on mobile, slide-in on desktop) ═══ -->
+  <div id="detail-panel" class="hidden">
+    <div class="panel-drag-handle"></div>
+    <div class="panel-header">
+      <span class="panel-icon" id="panel-icon"></span>
+      <div class="panel-title-block">
+        <h2 id="panel-title"></h2>
+        <span class="panel-progress-badge" id="panel-badge">0 / 0</span>
+      </div>
+      <button id="panel-close" class="panel-close-btn" title="Close">✕</button>
+    </div>
+    <div class="panel-body" id="panel-body"></div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
