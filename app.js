@@ -49,7 +49,7 @@
   buildTree();
   drawConnections();
   updateGlobalProgress();
-  fitToScreen();
+  focusInitial();
 
   // ── Controls ──
   document.getElementById("btn-zoom-in").addEventListener("click", () => changeZoom(ZOOM_STEP));
@@ -328,16 +328,42 @@
     } catch (e) { /* quota exceeded, oh well */ }
   }
 
+  function prefillUpTo2ndGrade() {
+    const prefillIds = ["early-math-review", "kindergarten-math", "1st-grade-math", "2nd-grade-math"];
+    prefillIds.forEach(id => {
+      const course = MATH_DATA.find(c => c.id === id);
+      if (course) {
+        if (!progress[id]) progress[id] = {};
+        course.topics.forEach((t, idx) => {
+          progress[id][idx] = true;
+        });
+      }
+    });
+  }
+
   function loadProgress() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) progress = JSON.parse(saved);
-    } catch (e) { progress = {}; }
+      if (saved) {
+        progress = JSON.parse(saved);
+        if (Object.keys(progress).length === 0) {
+          prefillUpTo2ndGrade();
+          saveProgress();
+        }
+      } else {
+        prefillUpTo2ndGrade();
+        saveProgress();
+      }
+    } catch (e) {
+      progress = {};
+      prefillUpTo2ndGrade();
+    }
   }
 
   function resetProgress() {
     if (!confirm("Reset all progress? This cannot be undone.")) return;
     progress = {};
+    prefillUpTo2ndGrade();
     saveProgress();
     // Refresh display
     MATH_DATA.forEach((c) => updateNodeDisplay(c.id));
@@ -361,6 +387,35 @@
       panX = centerX - (centerX - panX) * (zoom / oldZoom);
       panY = centerY - (centerY - panY) * (zoom / oldZoom);
     }
+    applyTransform();
+  }
+
+  function focusInitial() {
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
+    const gapX = getGapX();
+    const gapY = getGapY();
+    const nodeW = getNodeW();
+
+    const initialNodes = MATH_DATA.filter(c => c.y <= 3);
+    if (initialNodes.length === 0) return fitToScreen();
+
+    const minNodeX = Math.min(...initialNodes.map(c => NODE_PADDING_X + c.x * gapX));
+    const maxNodeX = Math.max(...initialNodes.map(c => NODE_PADDING_X + c.x * gapX)) + nodeW;
+    const minNodeY = Math.min(...initialNodes.map(c => NODE_PADDING_Y + c.y * gapY));
+    const maxNodeY = Math.max(...initialNodes.map(c => NODE_PADDING_Y + c.y * gapY)) + 100;
+
+    const clusterW = maxNodeX - minNodeX;
+    const clusterH = maxNodeY - minNodeY;
+
+    const scaleX = vw / (clusterW + 60);
+    const scaleY = vh / (clusterH + 60);
+
+    zoom = Math.min(scaleX, scaleY) * 0.95;
+    zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
+
+    panX = (vw - clusterW * zoom) / 2 - minNodeX * zoom;
+    panY = (vh - clusterH * zoom) / 2 - minNodeY * zoom;
     applyTransform();
   }
 
