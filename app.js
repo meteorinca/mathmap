@@ -73,11 +73,44 @@
   }
 
   // ── Init ──
-  loadProgress();
-  buildTree();
-  drawConnections();
-  updateGlobalProgress();
-  requestAnimationFrame(() => fitToScreen());
+  async function init() {
+    let profileData = null;
+    const qs = window.location.search.substring(1);
+    
+    if (qs) {
+      try {
+        const res = await fetch('profiles.json');
+        const profiles = await res.json();
+        if (profiles[qs]) {
+          profileData = profiles[qs];
+        }
+      } catch (e) {
+        console.error("Failed to load profiles.json", e);
+      }
+    }
+
+    if (profileData && profileData.progress) {
+      progress = profileData.progress;
+      saveProgress();
+    } else {
+      loadProgress();
+    }
+
+    buildTree();
+    drawConnections();
+    updateGlobalProgress();
+
+    requestAnimationFrame(() => {
+      if (profileData && profileData.focus) {
+        focusNode(profileData.focus, profileData.zoom || 1);
+        openPanel(profileData.focus);
+      } else {
+        // Default zoom: start at bottom with reasonable zoom
+        focusNode("early-math-review", 0.85);
+      }
+    });
+  }
+  init();
 
   // ── Controls ──
   document.getElementById("btn-zoom-in").addEventListener("click", () => changeZoom(ZOOM_STEP));
@@ -574,6 +607,24 @@
       panX = centerX - (centerX - panX) * (zoom / oldZoom);
       panY = centerY - (centerY - panY) * (zoom / oldZoom);
     }
+    applyTransform();
+  }
+
+  function focusNode(courseId, customZoom = 1) {
+    const course = courseMap[courseId];
+    if (!course) return;
+
+    zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, customZoom));
+    const nodeSize = getNodeSize();
+    const px = toCanvasX(course.x) + nodeSize / 2;
+    const py = toCanvasY(course.y) + nodeSize / 2;
+
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
+
+    panX = (vw / 2) - (px * zoom);
+    panY = (vh / 2) - (py * zoom);
+    
     applyTransform();
   }
 
