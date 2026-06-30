@@ -37,9 +37,9 @@
   --font-display: 'Orbitron', sans-serif;
 
   /* Node sizing — now circular */
-  --node-size:   72px;
-  --node-gap-x:  140px;
-  --node-gap-y:  110px;
+  --node-size:   90px;
+  --node-gap-x:  160px;
+  --node-gap-y:  130px;
 }
 
 /* ---- Reset ---- */
@@ -191,28 +191,42 @@ html, body {
   will-change: transform;
 }
 
+@keyframes gridDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: 30px 30px; }
+}
+
 /* Subtle dot grid */
 #viewport::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px);
   background-size: 30px 30px;
   pointer-events: none;
   z-index: 0;
+  animation: gridDrift 15s linear infinite;
+}
+
+@keyframes ambientDrift {
+  0% { transform: scale(1) translate(0, 0); }
+  33% { transform: scale(1.1) translate(2%, -2%); }
+  66% { transform: scale(0.9) translate(-2%, 2%); }
+  100% { transform: scale(1) translate(0, 0); }
 }
 
 /* Ambient glow effects */
 #viewport::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: -20%;
   background:
-    radial-gradient(ellipse 40% 30% at 20% 80%, rgba(255,107,157,0.04) 0%, transparent 100%),
-    radial-gradient(ellipse 35% 35% at 50% 50%, rgba(6,214,160,0.03) 0%, transparent 100%),
-    radial-gradient(ellipse 40% 30% at 80% 30%, rgba(131,56,236,0.04) 0%, transparent 100%);
+    radial-gradient(ellipse 40% 30% at 20% 80%, rgba(255,107,157,0.05) 0%, transparent 100%),
+    radial-gradient(ellipse 35% 35% at 50% 50%, rgba(6,214,160,0.04) 0%, transparent 100%),
+    radial-gradient(ellipse 40% 30% at 80% 30%, rgba(131,56,236,0.05) 0%, transparent 100%);
   pointer-events: none;
   z-index: 0;
+  animation: ambientDrift 25s ease-in-out infinite;
 }
 
 /* ============================================================
@@ -706,9 +720,9 @@ html, body {
     font-size: 12px;
   }
   :root {
-    --node-size: 60px;
-    --node-gap-x: 110px;
-    --node-gap-y: 95px;
+    --node-size: 75px;
+    --node-gap-x: 130px;
+    --node-gap-y: 110px;
   }
   .node-label {
     font-size: 9px;
@@ -721,8 +735,8 @@ html, body {
     display: none;
   }
   :root {
-    --node-size: 52px;
-    --node-gap-x: 90px;
-    --node-gap-y: 85px;
+    --node-size: 65px;
+    --node-gap-x: 100px;
+    --node-gap-y: 95px;
   }
 }

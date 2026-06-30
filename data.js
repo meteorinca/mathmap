@@ -34,7 +34,7 @@ const MATH_DATA = [
   {
     name: "Early Math Review",
     id: "early-math-review",
-    icon: "🧒",
+    icon: "🍎",
     branch: "foundations",
     x: 3, y: 0,
     prereqs: [],
@@ -49,19 +49,6 @@ const MATH_DATA = [
       { name: "Geometry", link: "" }
     ]
   },
-  {
-    name: "Kindergarten",
-    id: "kindergarten-math",
-    icon: "🎨",
-    branch: "foundations",
-    x: 5, y: 0,
-    prereqs: [],
-    topics: [
-      { name: "Counting and place value", link: "" },
-      { name: "Addition and subtraction", link: "" },
-      { name: "Measurement and geometry", link: "" }
-    ]
-  },
 
   // ══════════════════════════════════════════════════
   // ROW 1 — Elementary begins
@@ -72,7 +59,7 @@ const MATH_DATA = [
     icon: "1️⃣",
     branch: "elementary",
     x: 4, y: 1,
-    prereqs: ["early-math-review", "kindergarten-math"],
+    prereqs: ["early-math-review"],
     topics: [
       { name: "Place value", link: "" },
       { name: "Addition and subtraction", link: "" },

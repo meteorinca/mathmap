@@ -489,6 +489,7 @@
     if (done >= total && total > 0) return "completed";
     if (done > 0) return "in-progress";
     if (!course.prereqs || course.prereqs.length === 0) return "unlocked";
+    if (course.id === "1st-grade-math") return "unlocked";
     const allPrereqsDone = course.prereqs.every((pid) => {
       const p = courseMap[pid];
       return p && getCompletedCount(pid) >= p.topics.length;
